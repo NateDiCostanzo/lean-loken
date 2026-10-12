@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en" data-app-src="app.js?v=bfd2db7df9" data-build="bfd2db7df9">
+<html lang="en" data-app-src="app.js?v=6837f61400" data-build="6837f61400">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0C1118" media="(prefers-color-scheme: dark)">
@@ -1432,6 +1432,24 @@ html.ll-signedout body{padding:0}
 .ll-nudge .ll-sub{font-size:13px;color:var(--ink-2)}
 .ll-nudge-act{margin-left:auto;display:flex;align-items:center;gap:4px}
 .ll-nudge-act .ll-x{margin:0 -8px 0 0}
+
+/* ---- iPhone polish ----
+   iOS zooms the page when a field under 16px gets focus and never zooms back, which crops the right edge
+   and the tab labels. Fields are 16px on phones, the viewport caps the auto-zoom (pinch-zoom still works),
+   and nothing can widen the page sideways. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:clip}
+body{overflow-x:clip;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+button,a,label,select,input,[role="button"],[data-act]{touch-action:manipulation}
+@media (max-width:979px){
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea{font-size:16px!important}
+  input[type="date"],input[type="time"]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;text-align:left}
+  input::-webkit-date-and-time-value{text-align:left}
+  .main>*{min-width:0;max-width:100%}
+  body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+  .topbar{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .navbtn{min-height:52px}
+}
+@media (max-width:379px){ .sync{font-size:11px} }
 </style>
 </head>
 <body>
@@ -1457,9 +1475,9 @@ html.ll-signedout body{padding:0}
   <button class="navbtn" data-act="tab" data-v="plan"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>Plan</button>
 </div></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=bfd2db7df9"></script>
-<script src="claude-shim.js?v=bfd2db7df9"></script>
-<script src="pwa.js?v=bfd2db7df9"></script>
-<script src="auth.js?v=bfd2db7df9"></script>
+<script src="config.js?v=6837f61400"></script>
+<script src="claude-shim.js?v=6837f61400"></script>
+<script src="pwa.js?v=6837f61400"></script>
+<script src="auth.js?v=6837f61400"></script>
 </body>
 </html>

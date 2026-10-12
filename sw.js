@@ -1,8 +1,8 @@
 /* Lean Loken service worker: offline app shell, push display, notification deep links.
    pwa/build.py fills in the build version and the shell file list. All URLs resolve against the
    registration scope, so the app works from a GitHub Pages subpath. */
-const VERSION="bfd2db7df9";
-const SHELL=["./", "index.html", "app.js?v=bfd2db7df9", "config.js?v=bfd2db7df9", "claude-shim.js?v=bfd2db7df9", "pwa.js?v=bfd2db7df9", "auth.js?v=bfd2db7df9", "manifest.webmanifest", "icons/apple-touch-icon.png", "icons/badge-96.png", "icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png"];
+const VERSION="6837f61400";
+const SHELL=["./", "index.html", "app.js?v=6837f61400", "config.js?v=6837f61400", "claude-shim.js?v=6837f61400", "pwa.js?v=6837f61400", "auth.js?v=6837f61400", "manifest.webmanifest", "icons/apple-touch-icon.png", "icons/badge-96.png", "icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png"];
 const CDN=["https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"];
 const CACHE="ll-shell-"+VERSION, RUNTIME="ll-runtime";
 const scoped=p=>new URL(p,self.registration.scope).href;
