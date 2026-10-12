@@ -1,0 +1,92 @@
+/* AI sheet (Builder F): bottom sheet on phone, centered dialog from 640px */
+html.ai-lock{overflow:hidden}
+.ai-sheet{padding:0;border:0;background:transparent;color:var(--ink);width:100%;max-width:100%;max-height:100%;margin:auto 0 0;overflow:visible}
+.ai-sheet::backdrop{background:rgba(6,10,18,.52)}
+.ai-in{background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:16px 16px 0 0;display:flex;flex-direction:column;max-height:92vh;max-height:92dvh;padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -8px 32px rgba(0,0,0,.18);position:relative}
+.ai-in::before{content:"";position:absolute;top:6px;left:50%;width:36px;height:4px;margin-left:-18px;border-radius:2px;background:var(--line-2)}
+.ai-sheet[open] .ai-in{animation:aiUp .22s ease-out}
+@keyframes aiUp{from{transform:translateY(24px)}to{transform:none}}
+.ai-hd{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;padding:18px 16px 12px;border-bottom:1px solid var(--line)}
+.ai-ht{min-width:0}
+.ai-hd h2{font-size:22px;margin-top:2px}
+.ai-x{width:44px;height:44px;margin:-6px -6px 0 0}
+.ai-bd{overflow-y:auto;overscroll-behavior:contain;padding:16px;display:flex;flex-direction:column;gap:14px;min-height:0}
+.ai-ft{display:flex;gap:8px;align-items:center;padding:12px 16px;border-top:1px solid var(--line);flex-wrap:wrap;background:var(--surface)}
+.ai-ft .sp{flex:1}
+.ai-ft .btn{min-height:44px}
+.ai-rm{color:var(--bad)!important}
+@media (min-width:640px){
+  .ai-sheet{margin:auto;width:min(560px,calc(100% - 32px))}
+  .ai-in{border-radius:var(--r);border-bottom:1px solid var(--line);max-height:min(86vh,780px);box-shadow:0 16px 48px rgba(0,0,0,.24)}
+  .ai-in::before{display:none}
+  .ai-hd{padding-top:16px}
+  .ai-sheet[open] .ai-in{animation-name:aiPop}
+  @keyframes aiPop{from{transform:scale(.97)}to{transform:none}}
+}
+@media (prefers-reduced-motion:reduce){.ai-sheet[open] .ai-in{animation:none}.ai-sk i,.ai-dot{animation:none!important}}
+
+.ai-ctx{font-size:14px;color:var(--ink-2)}
+.ai-ctx b{font-weight:600;color:var(--ink)}
+.ai-fld{display:flex;flex-direction:column;gap:6px}
+.ai-fld label,.ai-mac legend{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.ai-sheet textarea{font-size:16px;min-height:88px}
+.ai-sheet textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.ai-row{display:flex;gap:10px 12px;align-items:center;flex-wrap:wrap}
+.ai-row .btn{min-height:44px}
+.ai-row .note{flex:1;min-width:180px}
+.ai-mac{border:0;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;min-width:0}
+.ai-mac legend{padding:0;margin-bottom:6px}
+.ai-mac[aria-busy="true"]{opacity:.55}
+@media (max-width:379px){.ai-mac{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ai-f{border:1px solid var(--line-2);border-radius:10px;padding:7px 10px 6px;display:flex;flex-direction:column;min-width:0;background:var(--surface)}
+.ai-f:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.ai-f label{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.ai-f input{width:100%;min-width:0;border:0;background:transparent;color:var(--ink);font-family:var(--f-cond);font-weight:700;font-size:24px;padding:0;outline:none;font-variant-numeric:tabular-nums}
+.ai-f input{-moz-appearance:textfield;appearance:textfield}
+.ai-f input::-webkit-inner-spin-button,.ai-f input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.ai-f input::placeholder{color:var(--line-2)}
+.ai-f span{font-size:11.5px;color:var(--muted)}
+.ai-f:has(input[aria-invalid="true"]){border-color:var(--bad)}
+.ai-err{color:var(--bad);font-size:13.5px;font-weight:500;background:var(--bad-soft);border-radius:var(--r-s);padding:9px 12px}
+.ai-err[hidden],.ai-off[hidden]{display:none}
+.ai-off{background:var(--sunken);border-radius:var(--r-s);padding:9px 12px;color:var(--ink-2)}
+.ai-src{font-size:12px;color:var(--muted)}
+.ai-tip{display:flex;gap:10px;align-items:baseline;background:var(--accent-soft);border-radius:var(--r-s);padding:10px 12px;font-size:14px;margin-top:6px}
+.ai-tip b{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);flex:none}
+#ai-res:empty{display:none}
+
+/* loading */
+.ai-busy{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:10px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:aiPulse 1s ease-in-out infinite}
+@keyframes aiPulse{50%{opacity:.25;transform:scale(.7)}}
+.ai-sk{display:flex;flex-direction:column;gap:9px}
+.ai-sk i{display:block;height:12px;border-radius:6px;background:linear-gradient(90deg,var(--sunken) 0%,var(--surface-2) 50%,var(--sunken) 100%);background-size:200% 100%;animation:aiShim 1.3s linear infinite}
+@keyframes aiShim{from{background-position:100% 0}to{background-position:-100% 0}}
+
+/* remaining + stats tiles */
+.ai-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
+.ai-tile{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-s);padding:8px 10px;min-width:0}
+.ai-tile b{display:block;font-family:var(--f-cond);font-size:21px;line-height:1.2;font-variant-numeric:tabular-nums}
+.ai-tile span{font-size:12px;color:var(--muted)}
+.ai-tile.over b{color:var(--warn)}
+
+/* suggestions */
+.ai-opts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ai-opt{border:1px solid var(--line);border-radius:var(--r-s);padding:11px 12px;display:flex;flex-direction:column;gap:4px}
+.ai-opt h3{font-size:15px}
+.ai-m{font-family:var(--f-mono);font-size:12.5px;color:var(--ink-2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ai-m .badge{font-family:var(--f-body)}
+.ai-why{font-size:13.5px;color:var(--muted)}
+.ai-opts+.ai-src{margin-top:8px}
+
+/* recap */
+.ai-live{white-space:pre-wrap;font-size:15px;line-height:1.55}
+.ai-recap{display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.55}
+.ai-focus{margin-top:10px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 var(--r-s) var(--r-s) 0;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.ai-focus b{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+.ai-focus+.ai-src{margin-top:8px}
+
+/* "What should I eat?" under the Log card */
+.ai-sugrow{padding:0 16px 16px;display:flex}
+.ai-sugrow .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+.ai-tile.unk b{color:var(--muted)}

@@ -1,0 +1,88 @@
+/* ---- PWA layer: sign-in, install guide, notifications, account (tokens from 00-base.css) ---- */
+html.ll-booting body>.side,html.ll-booting body>.topbar,html.ll-booting body>.main,html.ll-booting body>.tabs,
+html.ll-signedout body>.side,html.ll-signedout body>.topbar,html.ll-signedout body>.main,html.ll-signedout body>.tabs,
+html.ll-booting #ll-top,html.ll-signedout #ll-top{display:none!important}
+html.ll-signedout body{padding:0}
+
+/* sign-in */
+.ll-auth{min-height:100vh;min-height:100dvh;display:flex;justify-content:center;background:var(--bg);
+  padding:calc(env(safe-area-inset-top,0px) + 24px) 16px calc(env(safe-area-inset-bottom,0px) + 24px)}
+.ll-auth-in{width:100%;max-width:400px;display:flex;flex-direction:column;gap:18px;margin:auto 0;padding-bottom:6vh}
+.ll-brand{display:flex;justify-content:center;padding:4px 0 6px}
+.ll-brand .logo{font-size:26px;gap:11px}
+.ll-brand .logo .mark{width:36px;height:36px;border-radius:9px}
+.ll-brand .logo .mark svg{width:22px;height:22px}
+.ll-auth-card .card-b{padding:22px 20px 20px;gap:18px}
+.ll-auth-head{display:flex;flex-direction:column;gap:6px}
+.ll-auth-head h1{font-size:28px}
+.ll-lead{color:var(--ink-2);font-size:15px}
+.ll-lead b{font-weight:600;color:var(--ink);word-break:break-all}
+.ll-auth form{display:flex;flex-direction:column;gap:14px}
+.ll-field{display:flex;flex-direction:column;gap:6px}
+.ll-field>span,.ll-field>label{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.ll-field input{width:100%;min-width:0;border:1px solid var(--ctl);border-radius:10px;background:var(--surface);color:var(--ink);
+  font:500 17px var(--f-body);padding:12px 14px;min-height:50px}
+.ll-field input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.ll-modes{display:grid;grid-template-columns:1fr 1fr;width:100%}
+.ll-modes button{min-height:44px;font-size:14px}
+.ll-pw{position:relative}
+.ll-pw input{padding-right:52px}
+.ll-eye{position:absolute;right:3px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:none;background:none;border-radius:8px;display:grid;place-items:center;color:var(--muted)}
+.ll-eye:hover{color:var(--ink)}
+.ll-eye svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn.ll-wide{width:100%;min-height:50px;font-size:16px}
+.ll-msg{font-size:13.5px;font-weight:500;margin:-4px 0 0}
+.ll-msg.bad{color:var(--bad)} .ll-msg.ok{color:var(--good)}
+.ll-link{background:none;border:none;padding:10px 0;min-height:44px;color:var(--accent);font-weight:600;font-size:14px}
+.ll-link[disabled]{color:var(--muted);cursor:default}
+.ll-auth-foot{text-align:center}
+.ll-fatal{position:fixed;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);z-index:40;align-items:center}
+
+/* cards injected around the app */
+.ll-top{max-width:1040px;margin:0 auto;padding-top:16px;display:flex;flex-direction:column;gap:16px}
+.ll-top[hidden]{display:none}
+.ll-card .card-h h2{display:flex;align-items:center;gap:10px}
+.ll-hic{width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.ll-hic svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ll-p{font-size:14.5px;color:var(--ink-2)}
+.ll-p b{color:var(--ink);font-weight:600}
+.ll-x{width:44px;height:44px;margin:-10px -10px -10px auto;border:none;background:none;border-radius:8px;display:grid;place-items:center;color:var(--muted);flex:none}
+.ll-x svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.ll-x:hover{background:var(--surface-2);color:var(--ink)}
+#ll-install .card-h{flex-wrap:nowrap}
+.ll-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ll-steps li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;align-items:start;font-size:14.5px}
+.ll-steps .n{width:28px;height:28px;border-radius:50%;background:var(--sunken);color:var(--ink-2);display:grid;place-items:center;font:600 13px var(--f-mono)}
+.ll-steps li>span:last-child{padding-top:3px}
+.ll-steps b{font-weight:600}
+.ll-ic{display:inline-grid;place-items:center;width:24px;height:24px;margin-left:6px;vertical-align:-6px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--accent)}
+.ll-ic svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.ll-lead-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14.5px;font-weight:500}
+.ll-lead-row select{appearance:none;-webkit-appearance:none;border:1px solid var(--ctl);border-radius:8px;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C899B' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 8px center/16px;
+  color:var(--ink);font:500 15px var(--f-mono);padding:9px 32px 9px 12px;min-height:44px}
+.ll-lead-row select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.ll-sw-list{list-style:none;margin:2px 0 0;padding:0}
+.ll-sw-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-top:1px solid var(--line)}
+.ll-sw-row label{flex:1;min-width:0;display:flex;flex-direction:column;cursor:pointer}
+.ll-sw-row label b{font-weight:500;font-size:14.5px}
+.ll-sw-row label span{font-size:12.5px;color:var(--muted)}
+.ll-sw{appearance:none;-webkit-appearance:none;margin:0;width:48px;height:28px;border-radius:14px;background:var(--line-2);position:relative;flex:none;cursor:pointer;transition:background .15s;border:none}
+.ll-sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
+.ll-sw:checked{background:var(--accent)}
+.ll-sw:checked::after{transform:translateX(20px)}
+.ll-sw:disabled{opacity:.45;cursor:not-allowed}
+.ll-master .ll-sw-row{border-top:0;padding-top:0}
+.ll-sub-settings{display:flex;flex-direction:column;gap:10px}
+.ll-sub-settings[data-off] .ll-lead-row,.ll-sub-settings[data-off] .ll-sw-row label{opacity:.55}
+.ll-lead-row select:disabled{opacity:.6}
+.ll-sw:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.ll-acct{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ll-acct-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ll-acct-tx b{font-weight:600;overflow-wrap:anywhere}
+
+.ll-nudge{align-items:center}
+.ll-nudge .ll-sub{font-size:13px;color:var(--ink-2)}
+.ll-nudge-act{margin-left:auto;display:flex;align-items:center;gap:4px}
+.ll-nudge-act .ll-x{margin:0 -8px 0 0}
