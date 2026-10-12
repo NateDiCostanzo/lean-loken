@@ -205,12 +205,77 @@ function fuRulesCard(k){
     ["Alcohol","Rare: ≤2–4 drinks a week, never on training nights."]];
   return `<section class="card" id="fu-rules"><div class="card-h"><h2>Key rules</h2></div><ul class="fu-kr">${rules.map(([a,b])=>`<li><b>${a}</b><span>${esc(b)}</span></li>`).join("")}</ul></section>`;
 }
-const FU_TABS=[["overview","Overview"],["meals","Meals"],["supps","Supplements"],["micro","Micros"],["sleep","Caffeine & sleep"],["out","Eating out"],["safe","Safeguards"],["blood","Bloodwork"],["sources","Sources"]];
+
+/* ---------- weekly grocery list (all 7 planned days of a program week) ---------- */
+let FU_GW=null;   // week shown; null = the week you'd shop for now
+const FU_GRO_LS="leanloken.gro.";
+function fuGroDefault(){const pl=planFor(todayKey());if(pl.pre)return 1;if(pl.post)return 12;
+  return Math.min(12,pl.week+(pl.dow===0&&pl.week<12?1:0));}   // Sunday: shop for the coming week
+function fuGroWeek(){const w=FU_GW||fuGroDefault();return Math.max(1,Math.min(12,w));}
+function fuGroMon(w){return addDays(ST().start,(w-1)*7);}
+const FU_AISLES=[["protein","Protein & dairy",/egg|bacon|chicken|sirloin|turkey|salmon|beef|tuna|whey|yogurt|cottage|cheese|milk|jerky/i],
+  ["produce","Produce",/spinach|pepper|berr|banana|vegetable|broccoli|potato|apple|fruit|greens|onion|lettuce|avocado|orange/i],
+  ["grains","Grains & beans",/rice|toast|bread|sourdough|bean|oat|tortilla|pasta|quinoa|bagel/i],
+  ["pantry","Pantry",/./]];
+function fuGroUnit(u){u=(u||"").trim();const m={cups:"cup",slices:"slice",scoops:"scoop",tsps:"tsp",tbsps:"tbsp"};return m[u]||u;}
+function fuGrocery(w){
+  const mon=fuGroMon(w),agg=new Map();
+  for(let i=0;i<7;i++){let M={};try{M=buildMeals(tdT(addDays(mon,i))).meals||{};}catch(e){}
+    Object.values(M).forEach(m=>(m.items||[]).forEach(it=>{const q=tdQty(it.qty);if(!q||!q.n)return;
+      const raw=String(it.label||""),cooked=/\(cooked/i.test(raw)&&/chicken|sirloin|turkey|salmon|beef/i.test(raw);
+      const label=raw.replace(/ \((cooked|cooking|dry weight|cooked with the eggs)[^)]*\)/i,"").trim();
+      const u=fuGroUnit(q.u),key=label.toLowerCase()+"|"+u;
+      const a=agg.get(key)||{label,u,n:0,cooked,dry:/dry weight/i.test(raw)};a.n+=q.n;agg.set(key,a);}));}
+  const pl=(n,u)=>u&&n>1&&/^(slice|scoop|cup)$/.test(u)?u+"s":u;
+  const items=[...agg.values()].filter(a=>!/^salt$/i.test(a.label)).map(a=>{
+    let n=a.n,u=a.u,amt,extra="";
+    if(u==="tsp"&&n>=6){n=n/3;u="tbsp";}
+    if(u==="g"){n=Math.round(n/10)*10;amt=`${n.toLocaleString()} g`;if(n>=454)amt+=` (${(n/453.6).toFixed(1)} lb)`;}
+    else if(u==="oz"){n=Math.round(n);amt=`${n} oz`;if(n>=16)amt+=` (${(n/16).toFixed(1)} lb)`;}
+    else{n=Math.round(n*4)/4;if(u==="tbsp")n=Math.ceil(n);amt=`${n.toLocaleString()}${u?" "+pl(n,u):""}`;}
+    if(a.cooked&&a.u==="oz"){amt=`${(a.n*1.33/16).toFixed(1)} lb raw`;extra=`${(a.n/16).toFixed(1)} lb cooked (${Math.round(a.n)} oz)`;}
+    else if(a.dry)extra="dry weight";
+    else if(u==="tbsp"&&/oil/i.test(a.label))extra=`about ${Math.ceil(n/2)} fl oz`;
+    else if(/^whole eggs?$/i.test(a.label))extra=`${Math.ceil(a.n/12)} dozen`;
+    const aisle=(FU_AISLES.find(x=>x[2].test(a.label))||FU_AISLES[3])[0];
+    return {id:a.label.toLowerCase().replace(/[^a-z0-9]+/g,"-"),label:a.label,amt,extra,aisle};});
+  return items;
+}
+function fuGroChecked(w){try{return new Set(JSON.parse(localStorage.getItem(FU_GRO_LS+fuGroMon(w))||"[]"));}catch(e){return new Set();}}
+function fuGroceryCard(){
+  const w=fuGroWeek(),mon=fuGroMon(w),sun=addDays(mon,6),items=fuGrocery(w),done=fuGroChecked(w),pl=planFor(mon);
+  const cur=fuGroDefault()===w;
+  const sec=FU_AISLES.map(([id,name])=>{const xs=items.filter(x=>x.aisle===id);if(!xs.length)return "";
+    return `<div class="gr-sec"><h3 class="eyebrow">${esc(name)}</h3><ul>${xs.map(x=>{const on=done.has(x.id);
+      return `<li class="${on?"done":""}"><button class="chk ${on?"on":""}" data-act="fugro" data-v="${esc(x.id)}" aria-pressed="${on}" aria-label="${esc(x.label)}">${CHECK}</button><div class="gr-tx"><span>${esc(x.label)}</span>${x.extra?`<small>${esc(x.extra)}</small>`:""}</div><b class="num">${esc(x.amt)}</b></li>`;}).join("")}</ul></div>`;}).join("");
+  const left=items.filter(x=>!done.has(x.id)).length;
+  return `<section class="card" id="fu-grocery"><div class="card-h"><h2>Groceries · Week ${w}</h2><span class="sub">${esc(short(mon))} – ${esc(short(sun))}${cur?" · this shop":""}</span></div>
+    <div class="card-b">
+      <div class="gr-bar"><button class="btn sec sm" data-act="fugrow" data-v="-1" ${w<=1?"disabled style=\"visibility:hidden\"":""} aria-label="Previous week">‹ Week ${Math.max(1,w-1)}</button>
+        <span class="gr-left">${left?`${left} of ${items.length} left`:"All bought"}</span>
+        <button class="btn sec sm" data-act="fugrow" data-v="1" ${w>=12?"disabled style=\"visibility:hidden\"":""} aria-label="Next week">Week ${Math.min(12,w+1)} ›</button></div>
+      ${pl.dietBreak?`<div class="callout"><div><b>Diet break week.</b> Carbs are higher, so there's more rice and potatoes on this list.</div></div>`:""}
+      ${sec}
+      <div class="gr-act"><button class="btn sm" data-act="fugrocopy">Copy list</button>${done.size?`<button class="btn sec sm" data-act="fugroclear">Uncheck all</button>`:""}</div>
+      <p class="note">Covers all 7 planned days. Buy vegetables and berries in two trips so they stay fresh. On Sundays this shows the coming week.</p>
+    </div></section>`;
+}
+ACTIONS.fugro=el=>{const w=fuGroWeek(),s=fuGroChecked(w),id=el.dataset.v;s.has(id)?s.delete(id):s.add(id);
+  try{localStorage.setItem(FU_GRO_LS+fuGroMon(w),JSON.stringify([...s]));}catch(e){}rerenderKeepScroll();};
+ACTIONS.fugroclear=()=>{try{localStorage.removeItem(FU_GRO_LS+fuGroMon(fuGroWeek()));}catch(e){}rerenderKeepScroll();};
+ACTIONS.fugrow=el=>{FU_GW=Math.max(1,Math.min(12,fuGroWeek()+(+el.dataset.v||0)));rerenderKeepScroll();};
+ACTIONS.fugrocopy=()=>{const w=fuGroWeek(),items=fuGrocery(w);
+  const txt=`Week ${w} groceries (${short(fuGroMon(w))} – ${short(addDays(fuGroMon(w),6))})\n`+FU_AISLES.map(([id,name])=>{const xs=items.filter(x=>x.aisle===id);
+    return xs.length?`\n${name}\n`+xs.map(x=>`- ${x.label}: ${x.amt}${x.extra?` (${x.extra})`:""}`).join("\n"):"";}).join("\n");
+  const fail=()=>toast("Couldn't copy; long-press the list to select it");
+  try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>toast("Grocery list copied"),fail);else fail();}catch(e){fail();}};
+
+const FU_TABS=[["overview","Overview"],["meals","Meals"],["grocery","Groceries"],["supps","Supplements"],["micro","Micros"],["sleep","Caffeine & sleep"],["out","Eating out"],["safe","Safeguards"],["blood","Bloodwork"],["sources","Sources"]];
 const FU_LS="leanloken.fuelTab";
 function fuTab(){let v=null;try{v=localStorage.getItem(FU_LS);}catch(e){}return FU_TABS.some(x=>x[0]===v)?v:"overview";}
 function renderFuel(){
   const k=todayKey(), pl=planFor(k), tab=fuTab();
-  const body={overview:()=>fuTodayCard(k)+fuRulesCard(k),meals:()=>fuMealsCard(k),supps:fuSuppCard,micro:()=>fuMicroCard(k),sleep:()=>fuCaffeineCard(k),out:fuEatOutCard,safe:()=>fuSafeCard(k),blood:fuBloodCard,sources:fuSources}[tab];
+  const body={overview:()=>fuTodayCard(k)+fuRulesCard(k),meals:()=>fuMealsCard(k),grocery:fuGroceryCard,supps:fuSuppCard,micro:()=>fuMicroCard(k),sleep:()=>fuCaffeineCard(k),out:fuEatOutCard,safe:()=>fuSafeCard(k),blood:fuBloodCard,sources:fuSources}[tab];
   return `<div class="phead"><div class="t"><div class="eyebrow">Nutrition &amp; health${pl.pre?` · program starts ${esc(short(ST().start))}`:""}</div><h1>Fuel</h1></div></div>
     <nav class="fu-nav" aria-label="Fuel sections">${FU_TABS.map(([id,t])=>`<button data-act="fuelsec" data-v="${id}" aria-pressed="${id===tab}" class="${id===tab?"on":""}">${esc(t)}</button>`).join("")}</nav>
     <div class="fu-body" data-fu-tab="${tab}">${body()}</div>`;

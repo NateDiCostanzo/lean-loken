@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-app-src="app.js?v=f689beba22" data-build="f689beba22">
+<html lang="en" data-app-src="app.js?v=f6aab3ace4" data-build="f6aab3ace4">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
@@ -1344,6 +1344,20 @@ ol.fu-cites{padding-left:0;list-style:none;gap:0}
 ol.fu-cites li{border-top:1px solid var(--line)}
 ol.fu-cites li:first-child{border-top:0}
 ol.fu-cites a{display:block;padding:12px 4px;min-height:44px;font-size:13px;line-height:1.4}
+
+/* weekly groceries */
+#fu-grocery .gr-bar{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#fu-grocery .gr-left{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+#fu-grocery .gr-sec{display:flex;flex-direction:column;gap:6px}
+#fu-grocery .gr-sec ul{list-style:none;margin:0;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+#fu-grocery .gr-sec li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;min-height:52px;padding:8px 0}
+#fu-grocery .gr-sec li+li{border-top:1px solid var(--line)}
+#fu-grocery .gr-tx{display:flex;flex-direction:column;gap:1px;min-width:0}
+#fu-grocery .gr-tx span{font-size:15px;font-weight:500;color:var(--ink);line-height:1.3}
+#fu-grocery .gr-tx small{font-size:12px;color:var(--muted)}
+#fu-grocery li b{font-weight:600;font-size:14px;text-align:right;white-space:nowrap;color:var(--ink-2)}
+#fu-grocery li.done .gr-tx span,#fu-grocery li.done b{color:var(--muted);text-decoration:line-through}
+#fu-grocery .gr-act{display:flex;gap:8px;flex-wrap:wrap}
 /* ---- PWA layer: sign-in, install guide, notifications, account (tokens from 00-base.css) ---- */
 html.ll-booting body>.side,html.ll-booting body>.topbar,html.ll-booting body>.main,html.ll-booting body>.tabs,
 html.ll-signedout body>.side,html.ll-signedout body>.topbar,html.ll-signedout body>.main,html.ll-signedout body>.tabs,
@@ -1503,9 +1517,9 @@ button,a,label,select,input,[role="button"],[data-act]{touch-action:manipulation
   <button class="navbtn" data-act="tab" data-v="plan"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>Plan</button>
 </div></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=f689beba22"></script>
-<script src="claude-shim.js?v=f689beba22"></script>
-<script src="pwa.js?v=f689beba22"></script>
-<script src="auth.js?v=f689beba22"></script>
+<script src="config.js?v=f6aab3ace4"></script>
+<script src="claude-shim.js?v=f6aab3ace4"></script>
+<script src="pwa.js?v=f6aab3ace4"></script>
+<script src="auth.js?v=f6aab3ace4"></script>
 </body>
 </html>
